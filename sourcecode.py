@@ -21,3 +21,14 @@ def get_info():
             return info.lower()
     except:
         talk('Sorry Couldnt catch that!')   
+def send_email(sender, pwd, receiver, subject, body):
+    server= smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(sender, pwd)
+    email=EmailMessage()
+    email['From']=sender
+    email['To']=receiver
+    email['Subject']=subject
+    email.set_content(body)
+    server.send_message(email)
+    server.close()
