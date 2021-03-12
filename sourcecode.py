@@ -12,3 +12,13 @@ bot. setProperty("rate", 155)
 def talk(text):
     bot.say(text)
     bot.runAndWait()
+def get_info():
+    try:
+        with sr.Microphone() as source:
+            print('Go ahead....')
+            voice=listener.listen(source)
+            info=listener.recognize_google(voice)
+            print(info)
+            return info.lower()
+    except:
+        talk('Sorry Couldnt catch that!')   
