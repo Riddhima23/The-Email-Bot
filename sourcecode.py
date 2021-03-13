@@ -48,6 +48,14 @@ def get_email_info():
     print(elist)
     talk('Is the email address of the person already in the mail dictionary?')
     ans=get_info()
+    if ans== 'no':
+        talk('Please enter email address of the person!')
+        print('Email Address:')
+        x=input()
+        elist[name]=x
+        with open('data.json', 'a') as outfile:
+            json.dump(elist, outfile, indent = 4)
+    receiver=elist[name]
     print(receiver)
     talk('What is the subject of your email? ')
     subject=get_info()
