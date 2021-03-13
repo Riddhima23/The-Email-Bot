@@ -1,30 +1,47 @@
-import smtplib
-import speech_recognition as sr
-import pyttsx3
-from email.message import EmailMessage
+import os
 import json
+import pyttsx3
+import speech_recognition as sr
+import smtplib
+from email.message import EmailMessage
+import threading
+import queue
+from PIL import ImageTk, Image
+import tkinter as tk
+from tkinter import WORD
+from tkinter import messagebox
 
-listener = sr.Recognizer()
-bot=pyttsx3.init()
-bot. setProperty("rate", 155)
+def send():
+    queue.put(e.get())
+    e.delete(0,tk.END)
 
-def talk(text):
+def speak(text):
     bot.say(text)
     bot.runAndWait()
-def get_info():
+
+def takecommand():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        queue.put("Kurama:- Listening...\n")
+        r.pause_threshold = 1
+        audio = r.listen(source)
+
     try:
-        with sr.Microphone() as source:
-            print('Go ahead....')
-            voice=listener.listen(source)
-            info=listener.recognize_google(voice)
-            print(info)
-            return info.lower()
-    except:
-        talk('Sorry Couldnt catch that!')   
-def send_email(sender, pwd, receiver, subject, body):
+        queue.put("Kurama:- Recognizing...\n")
+        query = r.recognize_google(audio, language='en-in')
+        print(f"You-->{query}\n")
+
+    except Exception as e:
+        queue.put("Kurama:- Sorry couldn\'t recognise that !\n")
+        speak("Sorry couldn\'t recognise that !")
+        query="\quit"
+
+    return query
+
+def send_email(sender,pwd,receiver, subject, body):
     server= smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
-    server.login(sender, pwd)
+    server.login(sender,pwd)
     email=EmailMessage()
     email['From']=sender
     email['To']=receiver
@@ -32,39 +49,7 @@ def send_email(sender, pwd, receiver, subject, body):
     email.set_content(body)
     server.send_message(email)
     server.close()
-elist = {}
-with open('data.json') as json_file:
-    elist = json.load(json_file)
-def get_email_info():
-    talk('Hello! I am an email bot. I offer help to those who have hands but don\'t wanna use them! I would ask a few questions after which your email will be sent in a snap of fingers just like Thanos')
-    talk('Please enter your email and password!')
-    print('Email:')
-    sender=input()
-    print('Password:')
-    pwd=input()
-    talk('To whom you wanna send email? Type the name of the person!')
-    print("Reciever's name:")
-    name=input()
-    print(elist)
-    talk('Is the email address of the person already in the mail dictionary?')
-    ans=get_info()
-    if ans== 'no':
-        talk('Please enter email address of the person!')
-        print('Email Address:')
-        x=input()
-        elist[name]=x
-        with open('data.json', 'a') as outfile:
-            json.dump(elist, outfile, indent = 4)
-    receiver=elist[name]
-    print(receiver)
-    talk('What is the subject of your email? ')
-    subject=get_info()
-    talk('What is the content of your email?')
-    message=get_info()
-    send_email(sender,pwd,receiver,subject,message)
-    talk('Do you wanna send more emails or you wanna stop?')
-    tell=get_info()
-    if tell == 'yes':
-        get_email_info()
 
-get_email_info()
+elist = {}
+with open('data.json') as file:
+    elist = json.load(file)
