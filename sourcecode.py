@@ -33,8 +33,8 @@ def send_email(sender, pwd, receiver, subject, body):
     server.send_message(email)
     server.close()
 elist = {}
-with open('data.json') as file:
-    elist = json.load(file)
+with open('data.json') as json_file:
+    elist = json.load(json_file)
 def get_email_info():
     talk('Hello! I am an email bot. I offer help to those who have hands but don\'t wanna use them! I would ask a few questions after which your email will be sent in a snap of fingers just like Thanos')
     talk('Please enter your email and password!')
@@ -48,6 +48,14 @@ def get_email_info():
     print(elist)
     talk('Is the email address of the person already in the mail dictionary?')
     ans=get_info()
+    if ans== 'no':
+        talk('Please enter email address of the person!')
+        print('Email Address:')
+        x=input()
+        elist[name]=x
+        with open('data.json', 'a') as outfile:
+            json.dump(elist, outfile, indent = 4)
+    receiver=elist[name]
     print(receiver)
     talk('What is the subject of your email? ')
     subject=get_info()
