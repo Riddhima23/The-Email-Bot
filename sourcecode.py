@@ -111,10 +111,10 @@ def my_loop(queue):
             break
         queue.put("You:- " + content + "\n\n")
         send_email(email, password, elist[reply], sub, content)
-        speak(
-            "Congratulations ! You were able to send your first mail ! Do you want to send more emails or you want to stop ? ")
         queue.put(
             "Kurama:- Congratulations! You were able to send your first mail! Do you want to send more emails or you want to stop?\n\n")
+        speak(
+            "Congratulations ! You were able to send your first mail ! Do you want to send more emails or you want to stop ? ")
         ans = takecommand().lower()
         if ans == "\quit":
             queue.put("\quit")
