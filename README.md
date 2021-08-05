@@ -1,4 +1,4 @@
-# KURAMA-The Email Bot
+# The Email Bot
 # Welcome to the world of Kurama! Kurama is a generous bot who helps people send emails with little or no effort.
 # Guide to use Kurama:
 # Install the following python libraries:
